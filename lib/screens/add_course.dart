@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/utils/constants.dart';
 import 'package:studenthub/widgets/custom_text_field.dart';
+import 'package:studenthub/widgets/image_picker_widget.dart';
 import 'package:studenthub/models/course.dart';
 
 class AddCourseScreen extends StatefulWidget {
@@ -16,20 +17,19 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _imageUrlController = TextEditingController();
+  String? _selectedImagePath;
 
   void _addCourse() {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && _selectedImagePath != null) {
       final String title = _titleController.text.trim();
       final String description = _descriptionController.text.trim();
-      final String imageUrl = _imageUrlController.text.trim();
 
       // Create proper Course object with all required fields
       final newCourse = Course(
         id: DateTime.now().millisecondsSinceEpoch.toString(), // Generate unique ID
         title: title,
         description: description,
-        imageUrl: imageUrl,
+        imageUrl: _selectedImagePath!,
         instructor: "Student", // Default instructor for user-added courses
         duration: 20, // Default duration
         rating: 0.0, // Default rating for new courses
@@ -49,11 +49,17 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
         _formKey.currentState!.reset();
         _titleController.clear();
         _descriptionController.clear();
-        _imageUrlController.clear();
+        setState(() {
+          _selectedImagePath = null;
+        });
 
         // Notify parent to refresh the course list
         widget.onCourseAdded?.call();
       }
+    } else if (_selectedImagePath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select an image")),
+      );
     }
   }
 
@@ -61,7 +67,6 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    _imageUrlController.dispose();
     super.dispose();
   }
 
@@ -110,25 +115,14 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Image URL
-              CustomTextField(
-                label: "Image URL",
-                controller: _imageUrlController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Image URL is required";
-                  }
-                  // Basic URL validation
-                  final urlPattern = r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$';
-                  final assetPattern = r'^assets\/images\/[\w\.-]+\.(png|jpg|jpeg|gif|webp)$';
-
-                  if (!RegExp(urlPattern, caseSensitive: false).hasMatch(value) &&
-                      !RegExp(assetPattern, caseSensitive: false).hasMatch(value)) {
-                    return "Please enter a valid URL or asset path";
-                  }
-                  return null;
+              // Image Picker
+              ImagePickerWidget(
+                onImageSelected: (imagePath) {
+                  setState(() {
+                    _selectedImagePath = imagePath;
+                  });
                 },
-                keyboardType: TextInputType.url,
+                initialImagePath: _selectedImagePath,
               ),
               const SizedBox(height: 24),
 

@@ -34,27 +34,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color inactiveColor = Colors.grey.shade500;
-    final Color backgroundColor = Colors.black;
+    final Color backgroundColor = isDark ? Colors.grey.shade900 : Colors.black;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         toolbarHeight: 15,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
       ),
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
       ),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black26,
+              color: isDark ? Colors.black54 : Colors.black26,
               blurRadius: 10,
-              offset: Offset(0, -2),
+              offset: const Offset(0, -2),
             ),
           ],
         ),
@@ -67,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           type: BottomNavigationBarType.fixed,
           backgroundColor: backgroundColor,
-          selectedItemColor: Colors.white,
+          selectedItemColor: isDark ? Colors.white : Colors.white,
           unselectedItemColor: inactiveColor,
           selectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.bold,

@@ -1,11 +1,49 @@
 // lib/screens/course_detail_screen.dart
 import 'package:flutter/material.dart';
+import 'dart:io';
 import '../models/course.dart';
 
 class CourseDetailScreen extends StatelessWidget {
   final Course course;
 
   const CourseDetailScreen({super.key, required this.course});
+
+  Widget _buildImage(String imagePath) {
+    if (imagePath.startsWith('assets/')) {
+      // Asset image
+      return Image.asset(
+        imagePath,
+        height: 220,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 100),
+      );
+    } else if (imagePath.startsWith('http')) {
+      // Network image
+      return Image.network(
+        imagePath,
+        height: 220,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 100),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+    } else {
+      // File image
+      return Image.file(
+        File(imagePath),
+        height: 220,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 100),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,27 +63,7 @@ class CourseDetailScreen extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: course.imageUrl.startsWith('assets/')
-                  ? Image.asset(
-                      course.imageUrl,
-                      height: 220,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 100),
-                    )
-                  : Image.network(
-                      course.imageUrl,
-                      height: 220,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 100),
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                    ),
+              child: _buildImage(course.imageUrl),
             ),
 
             const SizedBox(height: 18),
