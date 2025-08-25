@@ -24,14 +24,14 @@ Features
 - User Profile: Personal profile page with student information
 - Settings: Customizable app preferences
 
-### Extra Features ⭐
-- **Dark Mode Toggle**: Fully functional light/dark theme switching with proper color adaptation
-- **Image Picker**: Choose images from phone gallery or select from built-in assets
-- **Real-time Updates**: Course list updates immediately when new courses are added
-- **Multi-format Image Support**: Handles local files, assets, and network images with loading states
-- **Form Validation**: Comprehensive validation with user-friendly error messages
-- **Empty State Handling**: Friendly messages when no courses are available
-- **Responsive Design**: Clean, modern UI with consistent Material Design principles
+ Extra Features 
+- Dark Mode Toggle: Fully functional light/dark theme switching with proper color adaptation
+- Image Picker: Choose images from phone gallery or select from built-in assets
+- Real-time Updates: Course list updates immediately when new courses are added
+- Multi-format Image Support: Handles local files, assets, and network images with loading states
+- Form Validation: Comprehensive validation with user-friendly error messages
+- Empty State Handling: Friendly messages when no courses are available
+- Responsive Design: Clean, modern UI with consistent Material Design principles
 
 Technical Implementation
 
